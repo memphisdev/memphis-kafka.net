@@ -113,7 +113,11 @@ internal class SuperstreamManager
     }
   }
 
-  internal static SuperstreamClient InitSuperstream(string token, ProducerConfig producerConfig)
+  internal static SuperstreamClient InitSuperstream(
+    string token,
+    string host,
+    ProducerConfig producerConfig
+  )
   {
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
 
@@ -130,7 +134,7 @@ internal class SuperstreamManager
     {
       try
       {
-        InitializeNatsConnection(token, ClientType.Producer, opts.Host);
+        InitializeNatsConnection(token, ClientType.Producer, host);
       }
       catch (Exception ex)
       {
@@ -168,7 +172,11 @@ internal class SuperstreamManager
     return newClient;
   }
 
-  internal static SuperstreamClient InitSuperstream(string token, ConsumerConfig producerConfig)
+  internal static SuperstreamClient InitSuperstream(
+    string token,
+    string host,
+    ConsumerConfig producerConfig
+  )
   {
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
 
@@ -185,7 +193,7 @@ internal class SuperstreamManager
     {
       try
       {
-        InitializeNatsConnection(token, ClientType.Producer, opts.Host);
+        InitializeNatsConnection(token, ClientType.Producer, host);
       }
       catch (Exception ex)
       {

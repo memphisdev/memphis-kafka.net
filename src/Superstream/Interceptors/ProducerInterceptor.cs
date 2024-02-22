@@ -134,7 +134,8 @@ internal class ProducerInterceptor<TKey, TValue> : DispatchProxy
   public static IProducer<K, V> Init<K, V>(
     IProducer<K, V> target,
     ProducerConfig producerConfig,
-    string token
+    string token,
+    string host
   )
   {
     var proxy =
@@ -142,7 +143,7 @@ internal class ProducerInterceptor<TKey, TValue> : DispatchProxy
       ?? throw new InvalidOperationException(typeof(IProducer<K, V>).Name);
 
     proxy.Target = target;
-    proxy.Client = InitSuperstream(token, producerConfig);
+    proxy.Client = InitSuperstream(token, host, producerConfig);
     return proxy as IProducer<K, V>
       ?? throw new InvalidOperationException(typeof(IProducer<K, V>).Name);
   }

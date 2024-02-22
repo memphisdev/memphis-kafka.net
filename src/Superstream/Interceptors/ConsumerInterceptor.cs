@@ -117,7 +117,8 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
   public static IConsumer<K, V> Init<K, V>(
     IConsumer<K, V> target,
     ConsumerConfig consumerConfig,
-    string token
+    string token,
+    string host
   )
   {
     var proxy =
@@ -125,7 +126,7 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
 
     proxy.Target = target;
-    proxy.Client = InitSuperstream(token, consumerConfig);
+    proxy.Client = InitSuperstream(token, host, consumerConfig);
     return proxy as IConsumer<K, V>
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
   }

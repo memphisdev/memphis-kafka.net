@@ -8,7 +8,12 @@ public static class SuperstreamInitializerExtensions
   )
   {
     options.EnsureIsValid();
-    return ProducerInterceptor<TKey, TValue>.Init(builder.Build(), options.ProducerConfig, options.Token);
+    return ProducerInterceptor<TKey, TValue>.Init(
+      builder.Build(),
+      options.ProducerConfig,
+      options.Token,
+      options.Host
+    );
   }
 
   public static IConsumer<TKey, TValue> BuildWithSuperstream<TKey, TValue>(
@@ -17,6 +22,11 @@ public static class SuperstreamInitializerExtensions
   )
   {
     options.EnsureIsValid();
-    return ConsumerInterceptor<TKey, TValue>.Init(builder.Build(), options.ConsumerConfig, options.Token);
+    return ConsumerInterceptor<TKey, TValue>.Init(
+      builder.Build(),
+      options.ConsumerConfig,
+      options.Token,
+      options.Host
+    );
   }
 }

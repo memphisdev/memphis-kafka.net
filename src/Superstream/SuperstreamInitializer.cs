@@ -4,20 +4,29 @@ internal static class SuperstreamInitializer
 {
   public static void Init<TKey, TValue>(
     ref IProducer<TKey, TValue> producer,
-    ProducerConfig config,
-    string token
+    ProducerBuildOptions options
   )
   {
-    producer = ProducerInterceptor<TKey, TValue>.Init(producer, config, token);
+    options.EnsureIsValid();
+    producer = ProducerInterceptor<TKey, TValue>.Init(
+      producer,
+      options.ProducerConfig,
+      options.Token,
+      options.Host
+    );
   }
 
   public static void Init<TKey, TValue>(
     ref IConsumer<TKey, TValue> consumer,
-    ConsumerConfig config,
-    string token
+    ConsumerBuildOptions options
   )
   {
-    consumer = ConsumerInterceptor<TKey, TValue>.Init(consumer, config, token);
+    consumer = ConsumerInterceptor<TKey, TValue>.Init(
+      consumer,
+      options.ConsumerConfig,
+      options.Token,
+      options.Host
+    );
   }
 
   public static IConsumer<TKey, TValue> Init<TKey, TValue>(
