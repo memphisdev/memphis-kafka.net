@@ -5,12 +5,35 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
+
+    <PackageId>Superstream</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Memphis.dev team</Authors>
+    <Company>Memphis.dev</Company>
+    <PackageTags>Superstream</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <EnablePackageValidation>false</EnablePackageValidation>
+    <PackageValidationBaselineVersion>0.1.0</PackageValidationBaselineVersion>
+
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CliWrap" />
     <PackageReference Include="Confluent.Kafka" />
     <PackageReference Include="CSharpier.MSBuild">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="DotNet.ReproducibleBuilds">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -26,9 +49,5 @@
 
   <ItemGroup>
     <Content Include="build/Superstream.targets" PackagePath="build/Superstream.targets" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Utils/" />
   </ItemGroup>
 </Project>

@@ -9,6 +9,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
+    <PackageVersion Include="DotNet.ReproducibleBuilds" Version="1.1.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageVersion>
     <PackageVersion Include="NATS.Client" Version="1.1.2" />
     <PackageVersion Include="ProtoBufEval" Version="0.1.9" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
