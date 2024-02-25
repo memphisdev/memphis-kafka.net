@@ -23,22 +23,8 @@ internal class SuperstreamManager
     options.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
     options.MaxReconnect = Options.ReconnectForever;
 
-    string[] tokenArray = token.Split(":::");
-    if (tokenArray.Length != 2)
-    {
-      throw new ArgumentException("superstream: token is not valid");
-    }
-    string jwt = tokenArray[0];
-    string nKey = tokenArray[1];
-
-    options.SetJWTEventHandlers(
-      (sender, args) => args.JWT = jwt,
-      (sender, args) =>
-      {
-        var userNKey = Nkeys.FromSeed(nKey);
-        args.SignedNonce = userNKey.Sign(args.ServerNonce);
-      }
-    );
+    options.User = "superstream_internal";
+    options.Password = token;
 
     options.ReconnectedEventHandler += (sender, args) =>
     {
