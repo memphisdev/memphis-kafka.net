@@ -90,7 +90,6 @@ internal class SuperstreamClient
     }
   }
 
-
   public void SendLearningMessage(byte[] message)
   {
     try
@@ -188,7 +187,7 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      HandleError($"{nameof(SendClientTypeUpdateRequest at publish)}: {ex.Message}");
+      HandleError($"{nameof(SendClientTypeUpdateRequest)} at publish: {ex.Message}");
     }
   }
 

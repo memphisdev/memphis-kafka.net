@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Confluent.Kafka;
 using Superstream;
+using System.Text;
 
 var token = "<superstream-token>";
 var host = "<superstream-host>";
@@ -36,7 +37,7 @@ Console.CancelKeyPress += (_, e) =>
 
 while (!cancelled)
 {
-  string key = null;
+  string key = null!;
   var person = new Person
   {
     Name = "John Doe",
@@ -61,7 +62,7 @@ while (!cancelled)
 class Person
 {
   [JsonPropertyName("name")]
-  public string Name { get; set; }
+  public string Name { get; set; } = null!;
   [JsonPropertyName("age")]
   public int Age { get; set; }
 }
