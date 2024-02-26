@@ -12,7 +12,8 @@ internal static class SuperstreamInitializer
       producer,
       options.ProducerConfig,
       options.Token,
-      options.Host
+      options.Host,
+      options.LearningFactor
     );
   }
 
@@ -25,7 +26,8 @@ internal static class SuperstreamInitializer
       consumer,
       options.ConsumerConfig,
       options.Token,
-      options.Host
+      options.Host,
+      options.LearningFactor
     );
   }
 

@@ -102,7 +102,8 @@ internal class SuperstreamManager
   internal static SuperstreamClient InitSuperstream(
     string token,
     string host,
-    ProducerConfig producerConfig
+    ProducerConfig producerConfig,
+    int learningFactor
   )
   {
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
@@ -114,6 +115,7 @@ internal class SuperstreamManager
     {
       Configuration = conf,
       ClientType = ClientType.Producer,
+      LearningFactor = learningFactor
     };
 
     if (BrokerConnection == null)
@@ -130,8 +132,7 @@ internal class SuperstreamManager
     }
 
     newClient.LearningFactor = opts.LearningFactor;
-    newClient.Configuration.Servers = opts.Servers;
-    newClient.Configuration.ConsumerGroupId = opts.ConsumerGroup;
+    newClient.Configuration.Servers = conf.Servers;
 
     try
     {
@@ -161,24 +162,25 @@ internal class SuperstreamManager
   internal static SuperstreamClient InitSuperstream(
     string token,
     string host,
-    ConsumerConfig producerConfig
+    ConsumerConfig consumerConfig,
+    int learningFactor
   )
   {
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
 
     var opts = SuperstreamOption.Default;
-    ClientConfiguration conf = producerConfig;
+    ClientConfiguration conf = consumerConfig;
     var newClient = new SuperstreamClient
     {
       Configuration = conf,
-      ClientType = ClientType.Producer,
+      ClientType = ClientType.Consumer,
     };
 
     if (BrokerConnection == null)
     {
       try
       {
-        InitializeNatsConnection(token, ClientType.Producer, host);
+        InitializeNatsConnection(token, ClientType.Consumer, host);
       }
       catch (Exception ex)
       {
@@ -188,8 +190,8 @@ internal class SuperstreamManager
     }
 
     newClient.LearningFactor = opts.LearningFactor;
-    newClient.Configuration.Servers = opts.Servers;
-    newClient.Configuration.ConsumerGroupId = opts.ConsumerGroup;
+    newClient.Configuration.Servers = conf.Servers;
+    newClient.Configuration.ConsumerGroupId = conf.ConsumerGroupId;
 
     try
     {

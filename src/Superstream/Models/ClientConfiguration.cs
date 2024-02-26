@@ -3,11 +3,11 @@
 #nullable disable
 internal class ClientConfiguration
 {
+  [JsonPropertyName("consumer_group")]
+  public string ConsumerGroup { get; set; }
+
   [JsonPropertyName("client_type")]
   public string ClientType { get; set; }
-
-  [JsonPropertyName("producer_max_messages_bytes")]
-  public int? ProducerMaxMessageBytes { get; set; }
 
   [JsonPropertyName("producer_required_acks")]
   public string ProducerRequiredAcks { get; set; }
@@ -21,23 +21,11 @@ internal class ClientConfiguration
   [JsonPropertyName("producer_retry_backoff")]
   public int? ProducerRetryBackoff { get; set; }
 
-  [JsonPropertyName("producer_return_errors")]
-  public bool ProducerReturnErrors { get; set; }
-
-  [JsonPropertyName("producer_return_successes")]
-  public bool ProducerReturnSuccesses { get; set; }
-
-  [JsonPropertyName("producer_flush_max_messages")]
-  public int? ProducerFlushMaxMessages { get; set; }
-
   [JsonPropertyName("producer_compression_level")]
   public string ProducerCompressionLevel { get; set; }
 
   [JsonPropertyName("consumer_fetch_min")]
   public int? ConsumerFetchMin { get; set; }
-
-  [JsonPropertyName("consumer_fetch_default")]
-  public int ConsumerFetchDefault { get; set; }
 
   [JsonPropertyName("consumer_retry_backoff")]
   public int? ConsumerRetryBackOff { get; set; }
@@ -45,23 +33,12 @@ internal class ClientConfiguration
   [JsonPropertyName("consumer_max_wait_time")]
   public int? ConsumerMaxWaitTime { get; set; }
 
-  [JsonPropertyName("consumer_max_processing_time")]
-  public int? ConsumerMaxProcessingTime { get; set; }
-
-  [JsonPropertyName("consumer_return_errors")]
-  public bool ConsumerReturnErrors { get; set; }
-
   [JsonPropertyName("consumer_offset_auto_commit_enable")]
   public bool? ConsumerOffsetAutoCommitEnable { get; set; }
 
   [JsonPropertyName("consumer_offset_auto_commit_interval")]
   public int? ConsumerOffsetAutoCommintInterval { get; set; }
 
-  [JsonPropertyName("consumer_offsets_initial")]
-  public int ConsumerOffsetsInitial { get; set; }
-
-  [JsonPropertyName("consumer_offsets_retry_max")]
-  public int ConsumerOffsetsRetryMax { get; set; }
 
   [JsonPropertyName("consumer_group_session_timeout")]
   public int? ConsumerGroupSessionTimeout { get; set; }
@@ -69,14 +46,6 @@ internal class ClientConfiguration
   [JsonPropertyName("consumer_group_heart_beat_interval")]
   public int? ConsumerGroupHeartBeatInterval { get; set; }
 
-  [JsonPropertyName("consumer_group_rebalance_timeout")]
-  public int? ConsumerGroupRebalanceTimeout { get; set; }
-
-  [JsonPropertyName("consumer_group_rebalance_retry_max")]
-  public int ConsumerGroupRebalanceRetryMax { get; set; }
-
-  [JsonPropertyName("consumer_group_rebalance_retry_back_off")]
-  public int? ConsumerGroupRebalanceRetryBackOff { get; set; }
 
   [JsonPropertyName("consumer_group_rebalance_reset_invalid_offsets")]
   public bool ConsumerGroupRebalanceResetInvalidOffsets { get; set; }
@@ -103,36 +72,31 @@ internal class ClientConfiguration
   {
     string requiredAcks = producerConfig.Acks switch
     {
-      Acks.None => "NoResponse",
-      Acks.Leader => "WaitForLocal",
-      Acks.All => "WaitForAll",
-      _ => "NoResponse",
+      Acks.None => "NoRequired",
+      Acks.Leader => "RequiredForLeaderOnly",
+      Acks.All => "RequiredForAll",
+      _ => "NoRequired",
     };
 
-    string compressionLevel = producerConfig.CompressionLevel switch
+    string compressionType = producerConfig.CompressionType switch
     {
-      0 => "CompressionNone",
-      1 => "CompressionGZIP",
-      2 => "CompressionSnappy",
-      3 => "CompressionZSTD",
-      0x08 => "compressionCodecMask",
-      5 => "timestampTypeMask",
-      -1000 => "CompressionLevelDefault",
+      Confluent.Kafka.CompressionType.None => "CompressionNone",
+      Confluent.Kafka.CompressionType.Gzip => "CompressionGZIP",
+      Confluent.Kafka.CompressionType.Snappy => "CompressionSnappy",
+      Confluent.Kafka.CompressionType.Lz4 => "CompressionLz4",
+      Confluent.Kafka.CompressionType.Zstd => "CompressionZstd",
       _ => "CompressionLevelDefault",
     };
 
     return new ClientConfiguration
     {
       ClientType = "producer",
-      ProducerMaxMessageBytes = producerConfig.MessageMaxBytes,
       ProducerRequiredAcks = requiredAcks,
       ProducerTimeout = producerConfig.RequestTimeoutMs,
       ProducerRetryMax = producerConfig.MessageSendMaxRetries,
       ProducerRetryBackoff = producerConfig.RetryBackoffMs,
-      ProducerReturnErrors = true,
-      ProducerReturnSuccesses = false,
-      ProducerFlushMaxMessages = producerConfig.QueueBufferingMaxMessages,
-      ProducerCompressionLevel = compressionLevel,
+      ProducerCompressionLevel = compressionType,
+      Servers = producerConfig.BootstrapServers
     };
   }
 
@@ -142,21 +106,15 @@ internal class ClientConfiguration
     {
       ClientType = "consumer",
       ConsumerFetchMin = consumerConfig.FetchMinBytes,
-      ConsumerFetchDefault = 1,
       ConsumerRetryBackOff = consumerConfig.ReconnectBackoffMs,
       ConsumerMaxWaitTime = consumerConfig.FetchWaitMaxMs,
-      ConsumerMaxProcessingTime = (int)TimeSpan.FromMilliseconds(100).TotalMilliseconds,
-      ConsumerReturnErrors = true,
       ConsumerOffsetAutoCommitEnable = consumerConfig.EnableAutoCommit,
       ConsumerOffsetAutoCommintInterval = consumerConfig.AutoCommitIntervalMs,
-      ConsumerOffsetsInitial = -1,
-      ConsumerOffsetsRetryMax = 3,
       ConsumerGroupSessionTimeout = consumerConfig.SessionTimeoutMs,
       ConsumerGroupHeartBeatInterval = consumerConfig.HeartbeatIntervalMs,
-      ConsumerGroupRebalanceTimeout = (int)TimeSpan.FromSeconds(60).TotalMilliseconds,
-      ConsumerGroupRebalanceRetryMax = 4,
-      ConsumerGroupRebalanceRetryBackOff = (int)TimeSpan.FromSeconds(2).TotalMilliseconds,
       ConsumerGroupRebalanceResetInvalidOffsets = consumerConfig.AutoOffsetReset is not null,
+      Servers = consumerConfig.BootstrapServers,
+      ConsumerGroupId = consumerConfig.GroupId
     };
 
     return conf;

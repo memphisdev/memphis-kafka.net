@@ -9,7 +9,7 @@ internal class SuperstreamClient
   public string? AccountName { get; set; }
   public string NatsConnectionId
   {
-    get => $"{BrokerConnection.ServerInfo.ServerName}:{BrokerConnection.ConnectedId}";
+    get => $"{BrokerConnection.ServerInfo.ServerName}:{BrokerConnection.ServerInfo.ClientId}";
   }
 
   public bool IsProducer => ClientType == ClientType.Producer;

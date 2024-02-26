@@ -26,6 +26,7 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
 
   public void OnConsume(ConsumeResult<TKey, byte[]> result, int partition)
   {
+    Console.WriteLine("on consume");
     if (!Client.IsConsumer)
     {
       Client.SendClientTypeUpdateRequest("consumer");
@@ -118,7 +119,8 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
     IConsumer<K, V> target,
     ConsumerConfig consumerConfig,
     string token,
-    string host
+    string host,
+    int learningFactor
   )
   {
     var proxy =
@@ -126,7 +128,7 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
 
     proxy.Target = target;
-    proxy.Client = InitSuperstream(token, host, consumerConfig);
+    proxy.Client = InitSuperstream(token, host, consumerConfig, learningFactor);
     return proxy as IConsumer<K, V>
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
   }
