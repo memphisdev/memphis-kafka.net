@@ -6,14 +6,21 @@ using Superstream;
 var token = "<superstream-token>";
 var host = "<superstream-host>";
 string brokerList = "<brokers>";
-string topicName = "<topic-name>";
+string topicName = "topic_1";
 
-var config = new ProducerConfig { BootstrapServers = brokerList };
+var config = new ProducerConfig { 
+  BootstrapServers = brokerList, 
+  SaslPassword= "...", 
+  SaslUsername= "...", 
+  SecurityProtocol = SecurityProtocol.SaslSsl, 
+  SaslMechanism = SaslMechanism.Plain};
+
 var options = new ProducerBuildOptions
 {
   Token = token,
   Host = host,
-  ProducerConfig = config
+  ProducerConfig = config,
+  LearningFactor = 250 // optional
 };
 using var producer = new ProducerBuilder<string?, byte[]>(config)
   .BuildWithSuperstream(options);
@@ -41,9 +48,9 @@ while (!cancelled)
     var deliveryReport = await producer.ProduceAsync(
         topicName, new() { Key = key, Value = JsonSerializer.SerializeToUtf8Bytes(person) });
 
-    await producer.ProduceAsync("<topic>", new() { Value = JsonSerializer.SerializeToUtf8Bytes("{\"test_key\":\"test_value\"}") });
+    await producer.ProduceAsync("<topic>", new() { Value = Encoding.UTF8.GetBytes("{\"test_key\":\"test_value\"}")});
+    Console.WriteLine($"Delivered to : {deliveryReport.TopicPartitionOffset}");
 
-    Console.WriteLine($"Delivered to: {deliveryReport.TopicPartitionOffset}");
   }
   catch (ProduceException<string, string> e)
   {

@@ -67,7 +67,7 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      throw new Exception($"superstream: error registering client", ex);
+      throw new Exception($"superstream: error registering client:", ex);
     }
   }
 
@@ -86,7 +86,7 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      throw new Exception($"error connecting with superstream", ex);
+      throw new Exception($"error connecting with superstream:", ex);
     }
   }
 
@@ -188,7 +188,7 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      HandleError($"{nameof(SendClientTypeUpdateRequest)}: {ex.Message}");
+      HandleError($"{nameof(SendClientTypeUpdateRequest at publish)}: {ex.Message}");
     }
   }
 
@@ -226,20 +226,10 @@ internal class SuperstreamClient
         string.Format(Subjects.SuperstreamClientsUpdateSubject, "config", ClientId),
         byteConfig
       );
-
-      #region ADDED FOR BACKWARD COMPATIBILITY
-      HandleReportClientUpdateToOldVersion(byteCounters, ClientId);
-      #endregion
     }
     catch (Exception ex)
     {
       HandleError($"{nameof(HandleReportClientsUpdate)}: {ex.Message}");
     }
-  }
-
-  private void HandleReportClientUpdateToOldVersion(byte[] counters, int clientId)
-  {
-    string superstreamCountersSubject = "internal_tasks.countersUpdate.{0}";
-    BrokerConnection.Publish(string.Format(superstreamCountersSubject, clientId), counters);
   }
 }
