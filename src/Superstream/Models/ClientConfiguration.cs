@@ -39,13 +39,11 @@ internal class ClientConfiguration
   [JsonPropertyName("consumer_offset_auto_commit_interval")]
   public int? ConsumerOffsetAutoCommintInterval { get; set; }
 
-
   [JsonPropertyName("consumer_group_session_timeout")]
   public int? ConsumerGroupSessionTimeout { get; set; }
 
   [JsonPropertyName("consumer_group_heart_beat_interval")]
   public int? ConsumerGroupHeartBeatInterval { get; set; }
-
 
   [JsonPropertyName("consumer_group_rebalance_reset_invalid_offsets")]
   public bool ConsumerGroupRebalanceResetInvalidOffsets { get; set; }
@@ -90,7 +88,7 @@ internal class ClientConfiguration
 
     return new ClientConfiguration
     {
-      ClientType = "producer",
+      ClientType = "kafka",
       ProducerRequiredAcks = requiredAcks,
       ProducerTimeout = producerConfig.RequestTimeoutMs,
       ProducerRetryMax = producerConfig.MessageSendMaxRetries,
@@ -104,7 +102,7 @@ internal class ClientConfiguration
   {
     var conf = new ClientConfiguration
     {
-      ClientType = "consumer",
+      ClientType = "kafka",
       ConsumerFetchMin = consumerConfig.FetchMinBytes,
       ConsumerRetryBackOff = consumerConfig.ReconnectBackoffMs,
       ConsumerMaxWaitTime = consumerConfig.FetchWaitMaxMs,

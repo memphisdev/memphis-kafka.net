@@ -12,8 +12,8 @@ internal class SuperstreamClient
     get => $"{BrokerConnection.ServerInfo.ServerName}:{BrokerConnection.ServerInfo.ClientId}";
   }
 
-  public bool IsProducer => ClientType == ClientType.Producer;
-  public bool IsConsumer => ClientType == ClientType.Consumer;
+  public bool IsProducer => false;
+  public bool IsConsumer => false;
   public ClientType ClientType { get; set; }
   public int LearningFactor { get; set; }
   public int LearningFactorCounter { get; set; }
@@ -90,16 +90,6 @@ internal class SuperstreamClient
     }
   }
 
-  public void UpdateClientType()
-  {
-    var request = new ClientTypeUpdateRequest
-    {
-      ClientId = ClientId,
-      Type = ClientType.ToString().ToLower()
-    };
-    var message = JsonSerializer.SerializeToUtf8Bytes(request);
-    BrokerConnection.Publish(Subjects.ClientTypeUpdateSubject, message);
-  }
 
   public void SendLearningMessage(byte[] message)
   {

@@ -19,14 +19,13 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
     var result = targetMethod?.Invoke(Target, args);
     if (typeof(TValue) != typeof(byte[]))
       return result;
-    int partition = default;
+    int partition = -1;
     OnConsume(result as ConsumeResult<TKey, byte[]>, partition);
     return result;
   }
 
   public void OnConsume(ConsumeResult<TKey, byte[]> result, int partition)
   {
-    Console.WriteLine("on consume");
     if (!Client.IsConsumer)
     {
       Client.SendClientTypeUpdateRequest("consumer");
@@ -43,7 +42,9 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
       {
         var partitions = new List<int>(Client.Configuration.ConsumerTopicsPartitions[result.Topic]);
         partitions.Add(result.Partition);
-        Client.Configuration.ConsumerTopicsPartitions[result.Topic] = partitions.ToArray();
+        Client.Configuration.ConsumerTopicsPartitions[result.Topic] = partitions
+          .Where(val => val != -1)
+          .ToArray();
       }
     }
     else

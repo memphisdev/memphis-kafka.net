@@ -109,7 +109,6 @@ internal class SuperstreamManager
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
 
     var opts = SuperstreamOption.Default;
-    var clientType = "kafka";
     ClientConfiguration conf = producerConfig;
     var newClient = new SuperstreamClient
     {
