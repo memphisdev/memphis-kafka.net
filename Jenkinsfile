@@ -43,6 +43,10 @@ agent {
                 //   chmod +x dotnet-install.sh
                 //   ./dotnet-install.sh -c 8.0 -InstallDir ~/dotnet
                 // """
+                sh """
+                dotnet --list-sdks
+                dotnet --list-runtimes
+                """
             }
         }
 
