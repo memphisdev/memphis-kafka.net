@@ -33,9 +33,6 @@ agent {
                   ./dotnet-install.sh -c LTS
                   
                 """
-                    sh '$HOME/.dotnet/dotnet --version'
-                    sh 'dotnet --version'
-
             }
         }
 
@@ -47,23 +44,23 @@ agent {
             }
         }
 
-        // stage('Package the project') {
-        //     steps {
-        //       sh """
-        //         ~/.dotnet/dotnet pack -v normal -c Release --no-restore --include-source /p:ContinuousIntegrationBuild=true -p:PackageVersion=$versionTag src/Superstream/Superstream.csproj
-        //       """
-        //     }
-        // }
+        stage('Package the project') {
+            steps {
+              sh """
+                ~/.dotnet/dotnet pack -v normal -c Release --no-restore --include-source /p:ContinuousIntegrationBuild=true -p:PackageVersion=$versionTag src/Superstream/Superstream.csproj
+              """
+            }
+        }
 
-        // stage('Publish to NuGet') {
-        //     steps {
-        //       withCredentials([string(credentialsId: 'NUGET_KEY', variable: 'NUGET_KEY')]) {
-        //         sh """
-        //           ~/.dotnet/dotnet nuget push ./src/Superstream/bin/Release/Superstream.${versionTag}.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_KEY
-        //         """
-        //       }
-        //     }
-        // }
+        stage('Publish to NuGet') {
+            steps {
+              withCredentials([string(credentialsId: 'NUGET_KEY', variable: 'NUGET_KEY')]) {
+                sh """
+                  ~/.dotnet/dotnet nuget push ./src/Superstream/bin/Release/Superstream.${versionTag}.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_KEY
+                """
+              }
+            }
+        }
 
       stage('Create new Release'){
             when {
