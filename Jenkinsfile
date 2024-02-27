@@ -28,7 +28,7 @@ agent {
                 sh """
                   wget https://dot.net/v1/dotnet-install.sh
                   chmod +x dotnet-install.sh
-                  sudo ./dotnet-install.sh -c 8.0
+                  ./dotnet-install.sh -c 8.0 -InstallDir ~/dotnet
                 """
             }
         }
