@@ -32,6 +32,7 @@ agent {
                     sh 'echo "export PATH=\$PATH:\$HOME/.dotnet" >> $HOME/.bashrc'
                     sh 'source $HOME/.bashrc'
                     sh 'cat ~/.bashrc'
+                    sh 'dotnet --list-sdks'
 
             }
         }
