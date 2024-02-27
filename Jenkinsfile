@@ -1,7 +1,10 @@
 pipeline {
 
-    agent {
-            label 'memphis-jenkins-small-fleet-agent'
+agent {
+        docker {
+            label 'memphis-jenkins-big-fleet,'
+            image 'maven:3.8.4-openjdk-11'
+        }
     }
 
     stages {
@@ -25,7 +28,7 @@ pipeline {
                 sh """
                   wget https://dot.net/v1/dotnet-install.sh
                   chmod +x dotnet-install.sh
-                  ./dotnet-install.sh -c STS
+                  ./dotnet-install.sh -c 8.0
                 """
             }
         }
