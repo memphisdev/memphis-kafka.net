@@ -1,7 +1,10 @@
 pipeline {
 
 agent {
-      label 'memphis-jenkins-big-fleet,'
+        docker {
+            label 'memphis-jenkins-big-fleet,'
+            image 'mcr.microsoft.com/dotnet/sdk:8.0'
+        }
     }
 
     stages {
@@ -22,26 +25,21 @@ agent {
                         echo "Using version from version-beta.conf: ${env.versionTag}"                        
                     }
                 }            
-                sh """
-                  wget https://dot.net/v1/dotnet-install.sh
-                  chmod +x dotnet-install.sh
-                  ./dotnet-install.sh --runtime dotnet --version 8.0.0
-
-                """
-                sh """
-                   dotnet --list-sdks
-                   dotnet --list-runtimes
-                """
+                // sh """
+                //   wget https://dot.net/v1/dotnet-install.sh
+                //   chmod +x dotnet-install.sh
+                //   ./dotnet-install.sh -c 8.0 -InstallDir ~/dotnet
+                // """
             }
         }
 
-        // stage('Build project') {
-        //     steps {
-        //       sh """
-        //               ~/.dotnet/dotnet build -c Release superstream.sln
-        //             """
-        //     }
-        // }
+        stage('Build project') {
+            steps {
+              sh """
+                      ~/.dotnet/dotnet build -c Release superstream.sln
+                    """
+            }
+        }
 
         // stage('Package the project') {
         //     steps {
@@ -89,12 +87,12 @@ agent {
         always {
             cleanWs()
         }
-        // success {
-        //     notifySuccessful()
-        // }
-        // failure {
-        //     notifyFailed()
-        // }
+        success {
+            notifySuccessful()
+        }
+        failure {
+            notifyFailed()
+        }
     }
 }
 
