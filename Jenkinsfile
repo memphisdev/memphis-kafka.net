@@ -28,34 +28,38 @@ agent {
                   ./dotnet-install.sh --runtime dotnet --version 8.0.0
 
                 """
-            }
-        }
-
-        stage('Build project') {
-            steps {
-              sh """
-                      ~/.dotnet/dotnet build -c Release superstream.sln
-                    """
-            }
-        }
-
-        stage('Package the project') {
-            steps {
-              sh """
-                ~/.dotnet/dotnet pack -v normal -c Release --no-restore --include-source /p:ContinuousIntegrationBuild=true -p:PackageVersion=$versionTag src/Superstream/Superstream.csproj
-              """
-            }
-        }
-
-        stage('Publish to NuGet') {
-            steps {
-              withCredentials([string(credentialsId: 'NUGET_KEY', variable: 'NUGET_KEY')]) {
                 sh """
-                  ~/.dotnet/dotnet nuget push ./src/Superstream/bin/Release/Superstream.${versionTag}.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_KEY
+                   dotnet --list-sdks
+                   dotnet --list-runtimes
                 """
-              }
             }
         }
+
+        // stage('Build project') {
+        //     steps {
+        //       sh """
+        //               ~/.dotnet/dotnet build -c Release superstream.sln
+        //             """
+        //     }
+        // }
+
+        // stage('Package the project') {
+        //     steps {
+        //       sh """
+        //         ~/.dotnet/dotnet pack -v normal -c Release --no-restore --include-source /p:ContinuousIntegrationBuild=true -p:PackageVersion=$versionTag src/Superstream/Superstream.csproj
+        //       """
+        //     }
+        // }
+
+        // stage('Publish to NuGet') {
+        //     steps {
+        //       withCredentials([string(credentialsId: 'NUGET_KEY', variable: 'NUGET_KEY')]) {
+        //         sh """
+        //           ~/.dotnet/dotnet nuget push ./src/Superstream/bin/Release/Superstream.${versionTag}.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_KEY
+        //         """
+        //       }
+        //     }
+        // }
 
       stage('Create new Release'){
             when {
@@ -85,12 +89,12 @@ agent {
         always {
             cleanWs()
         }
-        success {
-            notifySuccessful()
-        }
-        failure {
-            notifyFailed()
-        }
+        // success {
+        //     notifySuccessful()
+        // }
+        // failure {
+        //     notifyFailed()
+        // }
     }
 }
 
