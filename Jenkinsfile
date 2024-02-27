@@ -34,6 +34,7 @@ agent {
                   
                 """
                     sh '$HOME/.dotnet/dotnet --version'
+                    sh 'dotnet --version'
 
             }
         }
