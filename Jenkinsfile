@@ -1,10 +1,7 @@
 pipeline {
 
 agent {
-        docker {
             label 'memphis-jenkins-big-fleet,'
-            image 'mcr.microsoft.com/dotnet/sdk:8.0'
-        }
     }
 
     stages {
@@ -24,6 +21,22 @@ agent {
                         env.versionTag = version
                         echo "Using version from version-beta.conf: ${env.versionTag}"                        
                     }
+                    // Define variables for convenience
+                    def dotnetVersion = '8.0'
+                    def installScriptUrl = 'https://dot.net/v1/dotnet-install.sh'
+
+                    // Download the dotnet-install.sh script
+                    sh "curl -Lsfo dotnet-install.sh ${installScriptUrl}"
+
+                    // Make the script executable
+                    sh "chmod +x dotnet-install.sh"
+
+                    // Run the script to install the .NET SDK
+                    sh "./dotnet-install.sh --channel ${dotnetVersion} --version latest"
+
+                    // Optionally, add dotnet to PATH. Adjust the path if you've used a custom installation directory
+                    sh 'echo "export PATH=\$PATH:\$HOME/.dotnet" >> $HOME/.bashrc'
+                    sh 'source $HOME/.bashrc'                    
                 }            
                 // sh """
                 //   wget https://dot.net/v1/dotnet-install.sh
