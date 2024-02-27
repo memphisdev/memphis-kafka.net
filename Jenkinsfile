@@ -27,7 +27,7 @@ agent {
                   wget https://dot.net/v1/dotnet-install.sh
                   chmod +x dotnet-install.sh
                   ./dotnet-install.sh -c LTS
-                  echo "export PATH=\$PATH:\$PWD/.dotnet" >> ~/.bashrc
+                  echo export PATH=\$PATH:\$PWD/.dotnet >> ~/.bashrc
                   cat  ~/.bashrc
                   source ~/.bashrc
                 dotnet --list-sdks
