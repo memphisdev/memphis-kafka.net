@@ -1,7 +1,7 @@
 pipeline {
 
 agent {
-            label 'memphis-jenkins-big-fleet,'
+            label 'memphis-jenkins-small-fleet-agent'
     }
 
     stages {
