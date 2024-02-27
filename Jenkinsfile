@@ -1,9 +1,7 @@
 pipeline {
 
 agent {
-        docker {
-            label 'memphis-jenkins-big-fleet,'
-        }
+      label 'memphis-jenkins-big-fleet,'
     }
 
     stages {
