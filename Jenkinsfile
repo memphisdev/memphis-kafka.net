@@ -3,6 +3,10 @@ pipeline {
 agent {
             label 'memphis-jenkins-small-fleet-agent'
     }
+    environment {
+            DOTNET_ROOT = "$HOME/.dotnet"
+            PATH = "$DOTNET_ROOT:$PATH"
+        }    
 
     stages {
         stage('Install .NET SDK') {
@@ -29,10 +33,7 @@ agent {
                   ./dotnet-install.sh -c LTS
                   
                 """
-                    sh 'echo "export PATH=\$PATH:\$HOME/.dotnet" >> $HOME/.bashrc'
-                    sh 'source $HOME/.bashrc'
-                    sh 'cat ~/.bashrc'
-                    sh 'dotnet --list-sdks'
+                    sh '$HOME/.dotnet/dotnet --version'
 
             }
         }
