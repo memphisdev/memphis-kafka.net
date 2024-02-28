@@ -23,22 +23,8 @@ internal class SuperstreamManager
     options.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
     options.MaxReconnect = Options.ReconnectForever;
 
-    string[] tokenArray = token.Split(":::");
-    if (tokenArray.Length != 2)
-    {
-      throw new ArgumentException("superstream: token is not valid");
-    }
-    string jwt = tokenArray[0];
-    string nKey = tokenArray[1];
-
-    options.SetJWTEventHandlers(
-      (sender, args) => args.JWT = jwt,
-      (sender, args) =>
-      {
-        var userNKey = Nkeys.FromSeed(nKey);
-        args.SignedNonce = userNKey.Sign(args.ServerNonce);
-      }
-    );
+    options.User = "superstream_internal";
+    options.Password = token;
 
     options.ReconnectedEventHandler += (sender, args) =>
     {
@@ -116,18 +102,19 @@ internal class SuperstreamManager
   internal static SuperstreamClient InitSuperstream(
     string token,
     string host,
-    ProducerConfig producerConfig
+    ProducerConfig producerConfig,
+    int learningFactor
   )
   {
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
 
     var opts = SuperstreamOption.Default;
-    var clientType = "kafka";
     ClientConfiguration conf = producerConfig;
     var newClient = new SuperstreamClient
     {
       Configuration = conf,
       ClientType = ClientType.Producer,
+      LearningFactor = learningFactor
     };
 
     if (BrokerConnection == null)
@@ -143,9 +130,6 @@ internal class SuperstreamManager
       }
     }
 
-    newClient.LearningFactor = opts.LearningFactor;
-    newClient.Configuration.Servers = opts.Servers;
-    newClient.Configuration.ConsumerGroupId = opts.ConsumerGroup;
 
     try
     {
@@ -175,24 +159,26 @@ internal class SuperstreamManager
   internal static SuperstreamClient InitSuperstream(
     string token,
     string host,
-    ConsumerConfig producerConfig
+    ConsumerConfig consumerConfig,
+    int learningFactor
   )
   {
     SuperstreamClients ??= new ConcurrentDictionary<int, SuperstreamClient>();
 
     var opts = SuperstreamOption.Default;
-    ClientConfiguration conf = producerConfig;
+    ClientConfiguration conf = consumerConfig;
     var newClient = new SuperstreamClient
     {
       Configuration = conf,
-      ClientType = ClientType.Producer,
+      ClientType = ClientType.Consumer,
+      LearningFactor = learningFactor
     };
 
     if (BrokerConnection == null)
     {
       try
       {
-        InitializeNatsConnection(token, ClientType.Producer, host);
+        InitializeNatsConnection(token, ClientType.Consumer, host);
       }
       catch (Exception ex)
       {
@@ -201,9 +187,6 @@ internal class SuperstreamManager
       }
     }
 
-    newClient.LearningFactor = opts.LearningFactor;
-    newClient.Configuration.Servers = opts.Servers;
-    newClient.Configuration.ConsumerGroupId = opts.ConsumerGroup;
 
     try
     {

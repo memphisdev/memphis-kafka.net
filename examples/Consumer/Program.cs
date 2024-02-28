@@ -6,22 +6,20 @@ using Superstream;
 var token = "<superstream-token>";
 var host = "<superstream-host>";
 string brokerList = "<brokers>";
-var topics = new List<string> { "test-topic" };
+var topics = new List<string> {"test"};
 
 Console.WriteLine($"Started consumer, Ctrl-C to stop consuming");
 
-var cancelled = false;
-Console.CancelKeyPress += (_, e) =>
-{
-  e.Cancel = true;
-  cancelled = true;
-};
-
+var cts = new CancellationTokenSource();
 var config = new ConsumerConfig
 {
-  GroupId = "groupid",
+  GroupId = "cg",
   BootstrapServers = brokerList,
-  EnableAutoCommit = false
+  EnableAutoCommit = false,
+  SaslPassword= "...",
+  SaslUsername = "...",
+  SecurityProtocol = SecurityProtocol.SaslSsl, 
+  SaslMechanism = SaslMechanism.Plain
 };
 var options = new ConsumerBuildOptions
 {
@@ -34,12 +32,13 @@ using var consumer = new ConsumerBuilder<Ignore, byte[]>(config)
         .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
         .BuildWithSuperstream(options);
 
-
-consumer.Assign(topics.Select(topic => new TopicPartitionOffset(topic, 0, Offset.Beginning)).ToList());
-
+// consume by specific partition
+consumer.Assign(topics.Select(topic => new TopicPartitionOffset(topic, 1, Offset.Beginning)).ToList());
+// consume from all partitions
+// consumer.Subscribe(topics);
 try
 {
-  while (!cancelled)
+  while (!cts.IsCancellationRequested)
   {
     try
     {

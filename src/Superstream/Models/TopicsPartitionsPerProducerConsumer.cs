@@ -2,12 +2,10 @@
 
 internal class TopicsPartitionsPerProducerConsumer
 {
-  // [JsonPropertyName("producer_topics_partitions")]
-  [JsonPropertyName("ProducerTopicsPartitions")]
+  [JsonPropertyName("producer_topics_partitions")]
   public Dictionary<string, int[]> ProducerTopicsPartitions { get; set; }
 
-  // [JsonPropertyName("consumer_group_topics_partitions")]
-  [JsonPropertyName("ConsumerTopicsPartitions")]
+  [JsonPropertyName("consumer_group_topics_partitions")]
   public Dictionary<string, int[]> ConsumerTopicsPartitions { get; set; }
 
   public TopicsPartitionsPerProducerConsumer()

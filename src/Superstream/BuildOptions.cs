@@ -4,6 +4,7 @@ public class BuildOptions
 {
   public string Token { get; set; } = null!;
   public string Host { get; set; } = null!;
+  public int LearningFactor { get; set; } = 0;
 
   internal virtual void EnsureIsValid()
   {

@@ -9,11 +9,11 @@ internal class SuperstreamClient
   public string? AccountName { get; set; }
   public string NatsConnectionId
   {
-    get => $"{BrokerConnection.ServerInfo.ServerName}:{BrokerConnection.ConnectedId}";
+    get => $"{BrokerConnection.ServerInfo.ServerName}:{BrokerConnection.ServerInfo.ClientId}";
   }
 
-  public bool IsProducer => ClientType == ClientType.Producer;
-  public bool IsConsumer => ClientType == ClientType.Consumer;
+  public bool IsProducer => false;
+  public bool IsConsumer => false;
   public ClientType ClientType { get; set; }
   public int LearningFactor { get; set; }
   public int LearningFactorCounter { get; set; }
@@ -67,7 +67,7 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      throw new Exception($"superstream: error registering client", ex);
+      throw new Exception($"superstream: error registering client:", ex);
     }
   }
 
@@ -86,19 +86,8 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      throw new Exception($"error connecting with superstream", ex);
+      throw new Exception($"error connecting with superstream:", ex);
     }
-  }
-
-  public void UpdateClientType()
-  {
-    var request = new ClientTypeUpdateRequest
-    {
-      ClientId = ClientId,
-      Type = ClientType.ToString().ToLower()
-    };
-    var message = JsonSerializer.SerializeToUtf8Bytes(request);
-    BrokerConnection.Publish(Subjects.ClientTypeUpdateSubject, message);
   }
 
   public void SendLearningMessage(byte[] message)
@@ -198,7 +187,7 @@ internal class SuperstreamClient
     }
     catch (Exception ex)
     {
-      HandleError($"{nameof(SendClientTypeUpdateRequest)}: {ex.Message}");
+      HandleError($"{nameof(SendClientTypeUpdateRequest)} at publish: {ex.Message}");
     }
   }
 
@@ -236,20 +225,10 @@ internal class SuperstreamClient
         string.Format(Subjects.SuperstreamClientsUpdateSubject, "config", ClientId),
         byteConfig
       );
-
-      #region ADDED FOR BACKWARD COMPATIBILITY
-      HandleReportClientUpdateToOldVersion(byteCounters, ClientId);
-      #endregion
     }
     catch (Exception ex)
     {
       HandleError($"{nameof(HandleReportClientsUpdate)}: {ex.Message}");
     }
-  }
-
-  private void HandleReportClientUpdateToOldVersion(byte[] counters, int clientId)
-  {
-    string superstreamCountersSubject = "internal_tasks.countersUpdate.{0}";
-    BrokerConnection.Publish(string.Format(superstreamCountersSubject, clientId), counters);
   }
 }

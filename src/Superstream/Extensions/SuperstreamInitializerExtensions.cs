@@ -12,7 +12,8 @@ public static class SuperstreamInitializerExtensions
       builder.Build(),
       options.ProducerConfig,
       options.Token,
-      options.Host
+      options.Host,
+      options.LearningFactor
     );
   }
 
@@ -26,7 +27,8 @@ public static class SuperstreamInitializerExtensions
       builder.Build(),
       options.ConsumerConfig,
       options.Token,
-      options.Host
+      options.Host,
+      options.LearningFactor
     );
   }
 }

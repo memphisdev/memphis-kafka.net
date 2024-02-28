@@ -6,9 +6,9 @@ internal static class IConnectionExtensions
 {
   public static string GenerateNatsConnectionId(this IConnection connection)
   {
-    var connectionId = connection.ConnectedId;
+    var clientId = connection.ServerInfo.ClientId;
     var serverName = connection.ServerInfo.ServerName;
-    return $"{serverName}:{connectionId}";
+    return $"{serverName}:{clientId}";
   }
 
   public static void SendClientErrorToBackend(this IConnection connection, string error)

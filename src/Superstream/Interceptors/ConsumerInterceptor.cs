@@ -19,7 +19,7 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
     var result = targetMethod?.Invoke(Target, args);
     if (typeof(TValue) != typeof(byte[]))
       return result;
-    int partition = default;
+    int partition = -1;
     OnConsume(result as ConsumeResult<TKey, byte[]>, partition);
     return result;
   }
@@ -42,7 +42,9 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
       {
         var partitions = new List<int>(Client.Configuration.ConsumerTopicsPartitions[result.Topic]);
         partitions.Add(result.Partition);
-        Client.Configuration.ConsumerTopicsPartitions[result.Topic] = partitions.ToArray();
+        Client.Configuration.ConsumerTopicsPartitions[result.Topic] = partitions
+          .Where(val => val != -1)
+          .ToArray();
       }
     }
     else
@@ -118,7 +120,8 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
     IConsumer<K, V> target,
     ConsumerConfig consumerConfig,
     string token,
-    string host
+    string host,
+    int learningFactor
   )
   {
     var proxy =
@@ -126,7 +129,7 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
 
     proxy.Target = target;
-    proxy.Client = InitSuperstream(token, host, consumerConfig);
+    proxy.Client = InitSuperstream(token, host, consumerConfig, learningFactor);
     return proxy as IConsumer<K, V>
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
   }
