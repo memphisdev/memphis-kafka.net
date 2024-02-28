@@ -130,8 +130,6 @@ internal class SuperstreamManager
       }
     }
 
-    newClient.LearningFactor = opts.LearningFactor;
-    newClient.Configuration.Servers = conf.Servers;
 
     try
     {
@@ -173,6 +171,7 @@ internal class SuperstreamManager
     {
       Configuration = conf,
       ClientType = ClientType.Consumer,
+      LearningFactor = learningFactor
     };
 
     if (BrokerConnection == null)
@@ -188,9 +187,6 @@ internal class SuperstreamManager
       }
     }
 
-    newClient.LearningFactor = opts.LearningFactor;
-    newClient.Configuration.Servers = conf.Servers;
-    newClient.Configuration.ConsumerGroupId = conf.ConsumerGroupId;
 
     try
     {
