@@ -130,7 +130,6 @@ internal class SuperstreamManager
       }
     }
 
-
     try
     {
       newClient.RegisterClient();
@@ -186,7 +185,6 @@ internal class SuperstreamManager
         return newClient;
       }
     }
-
 
     try
     {
