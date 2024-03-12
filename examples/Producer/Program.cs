@@ -6,15 +6,17 @@ using System.Text;
 
 var token = "<superstream-token>";
 var host = "<superstream-host>";
-string brokerList = "<brokers>";
+string brokerList = "";
 string topicName = "topic_1";
 
-var config = new ProducerConfig { 
-  BootstrapServers = brokerList, 
-  SaslPassword= "...", 
-  SaslUsername= "...", 
-  SecurityProtocol = SecurityProtocol.SaslSsl, 
-  SaslMechanism = SaslMechanism.Plain};
+var config = new ProducerConfig
+{
+  BootstrapServers = brokerList,
+  // SaslPassword= "...", 
+  // SaslUsername= "...", 
+  // SecurityProtocol = SecurityProtocol.SaslSsl, 
+  SaslMechanism = SaslMechanism.Plain
+};
 
 var options = new ProducerBuildOptions
 {
@@ -23,8 +25,11 @@ var options = new ProducerBuildOptions
   ProducerConfig = config,
   LearningFactor = 250 // optional
 };
-using var producer = new ProducerBuilder<string?, byte[]>(config)
-  .BuildWithSuperstream(options);
+
+var kafkaProducer = new ProducerBuilder<string?, byte[]>(config)
+  .Build();
+using var producer = SuperstreamInitializer.Init(kafkaProducer, options);
+
 Console.WriteLine("\n-----------------------------------------------------------------------");
 Console.WriteLine($"Producer {producer.Name} producing on topic {topicName}.");
 Console.WriteLine("-----------------------------------------------------------------------");
@@ -49,7 +54,7 @@ while (!cancelled)
     var deliveryReport = await producer.ProduceAsync(
         topicName, new() { Key = key, Value = JsonSerializer.SerializeToUtf8Bytes(person) });
 
-    await producer.ProduceAsync("<topic>", new() { Value = Encoding.UTF8.GetBytes("{\"test_key\":\"test_value\"}")});
+    await producer.ProduceAsync("<topic>", new() { Value = Encoding.UTF8.GetBytes("{\"test_key\":\"test_value\"}") });
     Console.WriteLine($"Delivered to : {deliveryReport.TopicPartitionOffset}");
 
   }

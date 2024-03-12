@@ -1,8 +1,8 @@
 ﻿namespace Superstream;
 
-internal static class SuperstreamInitializer
+public static class SuperstreamInitializer
 {
-  public static void Init<TKey, TValue>(
+  internal static void Init<TKey, TValue>(
     ref IProducer<TKey, TValue> producer,
     ProducerBuildOptions options
   )
@@ -17,7 +17,7 @@ internal static class SuperstreamInitializer
     );
   }
 
-  public static void Init<TKey, TValue>(
+  internal static void Init<TKey, TValue>(
     ref IConsumer<TKey, TValue> consumer,
     ConsumerBuildOptions options
   )
@@ -31,7 +31,7 @@ internal static class SuperstreamInitializer
     );
   }
 
-  public static IConsumer<TKey, TValue> Init<TKey, TValue>(
+  internal static IConsumer<TKey, TValue> Init<TKey, TValue>(
     ConsumerBuilder<TKey, TValue> builder,
     ConsumerBuildOptions options
   )
@@ -39,11 +39,40 @@ internal static class SuperstreamInitializer
     return builder.BuildWithSuperstream(options);
   }
 
-  public static IProducer<TKey, TValue> Init<TKey, TValue>(
+  internal static IProducer<TKey, TValue> Init<TKey, TValue>(
     ProducerBuilder<TKey, TValue> builder,
     ProducerBuildOptions options
   )
   {
     return builder.BuildWithSuperstream(options);
+  }
+
+  public static IProducer<K, V> Init<K, V>(
+    IProducer<K, V> target,
+    ProducerBuildOptions options
+  )
+  {
+    options.EnsureIsValid();
+    return ProducerInterceptor<K, V>.Init(
+      target,
+      options.ProducerConfig,
+      options.Token,
+      options.Host,
+      options.LearningFactor
+    );
+  }
+
+  public static IConsumer<K, V> Init<K, V>(
+    IConsumer<K, V> target,
+    ConsumerBuildOptions options
+  )
+  {
+    return ConsumerInterceptor<K, V>.Init(
+      target,
+      options.ConsumerConfig,
+      options.Token,
+      options.Host,
+      options.LearningFactor
+    );
   }
 }

@@ -22,31 +22,6 @@
     "**/node_modules": true,
     "**/build": true
   },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true,
-      "source.fixAll": true
-    }
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true,
-      "source.fixAll": true
-    }
-  },
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "eslint.enable": true,
-  "eslint.lintTask.enable": true,
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
-  "files.associations": {
-    "*.json": "jsonc"
-  },
   "files.exclude": {
     "**/.git": true,
     "**/.hg": true,
@@ -58,10 +33,4 @@
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  "[typescript][typescriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-      "source.fixAll": "explicit"
-    }
-  },
 }
