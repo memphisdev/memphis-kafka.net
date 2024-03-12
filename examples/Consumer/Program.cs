@@ -6,7 +6,7 @@ using Superstream;
 var token = "<superstream-token>";
 var host = "<superstream-host>";
 string brokerList = "<brokers>";
-var topics = new List<string> {"test"};
+var topics = new List<string> { "test" };
 
 Console.WriteLine($"Started consumer, Ctrl-C to stop consuming");
 
@@ -16,9 +16,9 @@ var config = new ConsumerConfig
   GroupId = "cg",
   BootstrapServers = brokerList,
   EnableAutoCommit = false,
-  SaslPassword= "...",
+  SaslPassword = "...",
   SaslUsername = "...",
-  SecurityProtocol = SecurityProtocol.SaslSsl, 
+  SecurityProtocol = SecurityProtocol.SaslSsl,
   SaslMechanism = SaslMechanism.Plain
 };
 var options = new ConsumerBuildOptions
@@ -28,9 +28,10 @@ var options = new ConsumerBuildOptions
   ConsumerConfig = config
 };
 
-using var consumer = new ConsumerBuilder<Ignore, byte[]>(config)
+var kafkaConsumer = new ConsumerBuilder<Ignore, byte[]>(config)
         .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
-        .BuildWithSuperstream(options);
+        .Build();
+using var consumer = SuperstreamInitializer.Init(kafkaConsumer, options);
 
 // consume by specific partition
 consumer.Assign(topics.Select(topic => new TopicPartitionOffset(topic, 1, Offset.Beginning)).ToList());

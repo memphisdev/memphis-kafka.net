@@ -26,12 +26,14 @@ var options = new ProducerBuildOptions
 };
 ```
 
-Then create a new instance of kafka producer use `BuildWithSuperstream()`:
+Then create a new instance of kafka producer and use `SuperstreamInitializer.Init` to initialize the producer with `Superstream` options:
 
 ```c#
-using var producer = new ProducerBuilder<string?, byte[]>(config)
-  .BuildWithSuperstream(options);
+var kafkaProducer = new ProducerBuilder<string?, byte[]>(config)
+  .Build();
+using var producer = SuperstreamInitializer.Init(kafkaProducer, options);
 ```
+
 Finally, to produce messages to kafka, use `ProduceAsync` or `Produce`:
 
 ```c#
@@ -57,11 +59,13 @@ var options = new ConsumerBuildOptions
 };
 ```
 
-Then create a new instance of kafka consumer use `BuildWithSuperstream()`:
+Then create a new instance of kafka consumer and use `SuperstreamInitializer.Init` to initialize the consumer with `Superstream` options:
 
 ```c#
-using var consumer = new ConsumerBuilder<Ignore, byte[]>(config)
-  .BuildWithSuperstream(options);
+var kafkaConsumer = new ConsumerBuilder<Ignore, byte[]>(config)
+        .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
+        .Build();
+using var consumer = SuperstreamInitializer.Init(kafkaConsumer, options);
 ```
 
 Finally, to consume messages from kafka, use `Consume`:
