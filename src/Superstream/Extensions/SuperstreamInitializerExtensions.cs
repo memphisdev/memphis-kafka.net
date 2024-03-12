@@ -1,8 +1,8 @@
 ﻿namespace Superstream;
 
-public static class SuperstreamInitializerExtensions
+internal static class SuperstreamInitializerExtensions
 {
-  public static IProducer<TKey, TValue> BuildWithSuperstream<TKey, TValue>(
+  internal static IProducer<TKey, TValue> BuildWithSuperstream<TKey, TValue>(
     this ProducerBuilder<TKey, TValue> builder,
     ProducerBuildOptions options
   )
@@ -17,7 +17,7 @@ public static class SuperstreamInitializerExtensions
     );
   }
 
-  public static IConsumer<TKey, TValue> BuildWithSuperstream<TKey, TValue>(
+  internal static IConsumer<TKey, TValue> BuildWithSuperstream<TKey, TValue>(
     this ConsumerBuilder<TKey, TValue> builder,
     ConsumerBuildOptions options
   )

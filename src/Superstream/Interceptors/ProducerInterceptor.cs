@@ -1,7 +1,11 @@
 namespace Superstream.Interceptors;
 
-internal class ProducerInterceptor<TKey, TValue> : DispatchProxy
+internal class ProducerInterceptor<TKey, TValue> : DispatchProxy, IDisposable
 {
+  private bool _disposed;
+
+
+
 #nullable disable
   public IProducer<TKey, TValue> Target { get; set; }
   public SuperstreamClient Client { get; set; }
@@ -147,5 +151,24 @@ internal class ProducerInterceptor<TKey, TValue> : DispatchProxy
     proxy.Client = InitSuperstream(token, host, producerConfig, learningFactor);
     return proxy as IProducer<K, V>
       ?? throw new InvalidOperationException(typeof(IProducer<K, V>).Name);
+  }
+
+  public void Dispose()
+  {
+    Dispose(disposing: true);
+    GC.SuppressFinalize(this);
+  }
+
+  protected virtual void Dispose(bool disposing)
+  {
+    if (!_disposed)
+    {
+      if (disposing)
+      {
+        Target.Dispose();
+      }
+
+      _disposed = true;
+    }
   }
 }

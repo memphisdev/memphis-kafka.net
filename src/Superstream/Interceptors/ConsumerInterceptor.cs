@@ -1,7 +1,8 @@
 namespace Superstream.Interceptors;
 
-internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
+internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy, IDisposable
 {
+  private bool _disposed = false;
 #nullable disable
   public IConsumer<TKey, TValue> Target { get; set; }
   public SuperstreamClient Client { get; set; }
@@ -132,5 +133,24 @@ internal class ConsumerInterceptor<TKey, TValue> : DispatchProxy
     proxy.Client = InitSuperstream(token, host, consumerConfig, learningFactor);
     return proxy as IConsumer<K, V>
       ?? throw new InvalidOperationException(typeof(IConsumer<K, V>).Name);
+  }
+
+  public void Dispose()
+  {
+    Dispose(true);
+    GC.SuppressFinalize(this);
+  }
+
+  public void Dispose(bool disposing)
+  {
+    if (_disposed)
+    {
+      return;
+    }
+    if (disposing)
+    {
+      Target.Dispose();
+    }
+    _disposed = true;
   }
 }
