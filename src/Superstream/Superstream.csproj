@@ -29,10 +29,6 @@
   <ItemGroup>
     <PackageReference Include="CliWrap" />
     <PackageReference Include="Confluent.Kafka" />
-    <PackageReference Include="CSharpier.MSBuild">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="DotNet.ReproducibleBuilds">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
