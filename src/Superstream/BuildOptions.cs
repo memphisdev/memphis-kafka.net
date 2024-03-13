@@ -2,9 +2,10 @@ namespace Superstream;
 
 public class BuildOptions
 {
-  public string Token { get; set; } = null!;
-  public string Host { get; set; } = null!;
+  internal string Token { get; set; } = null!;
+  public string Host { get; internal set; } = null!;
   public int LearningFactor { get; set; } = 0;
+  public string ConsumerGroup { get; set; } = string.Empty;
 
   internal virtual void EnsureIsValid()
   {
@@ -15,9 +16,9 @@ public class BuildOptions
   }
 }
 
-public sealed class ProducerBuildOptions : BuildOptions
+public sealed class ProducerBuildOptions(ProducerConfig producerConfig) : BuildOptions
 {
-  public ProducerConfig ProducerConfig { get; set; } = null!;
+  public ProducerConfig ProducerConfig { get; set; } = producerConfig;
 
   internal override void EnsureIsValid()
   {
@@ -27,9 +28,9 @@ public sealed class ProducerBuildOptions : BuildOptions
   }
 }
 
-public sealed class ConsumerBuildOptions : BuildOptions
+public sealed class ConsumerBuildOptions(ConsumerConfig consumerConfig) : BuildOptions
 {
-  public ConsumerConfig ConsumerConfig { get; set; } = null!;
+  public ConsumerConfig ConsumerConfig { get; set; } = consumerConfig;
 
   internal override void EnsureIsValid()
   {
