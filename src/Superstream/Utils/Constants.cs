@@ -16,6 +16,6 @@ internal static class Subjects
 
 internal static class SdkInfo
 {
-  public const string SdkVersion = "1.0.1";
+  public const string SdkVersion = "1.0.2";
   public const string SdkLanguage = "C#";
 }

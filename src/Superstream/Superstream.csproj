@@ -7,14 +7,14 @@
     <LangVersion>12</LangVersion>
 
     <PackageId>Superstream</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Memphis.dev team</Authors>
     <Company>Memphis.dev</Company>
     <PackageTags>Superstream</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <EnablePackageValidation>false</EnablePackageValidation>
-    <PackageValidationBaselineVersion>1.0.1</PackageValidationBaselineVersion>
+    <PackageValidationBaselineVersion>1.0.2</PackageValidationBaselineVersion>
 
   </PropertyGroup>
 
