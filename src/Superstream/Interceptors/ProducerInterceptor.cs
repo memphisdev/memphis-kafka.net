@@ -117,7 +117,6 @@ internal class ProducerInterceptor<TKey, TValue> : DispatchProxy, IDisposable
     else
     {
       Client.Counters.TotalBytesAfterReduction += byteMsg.Length;
-      Client.Counters.TotalMessagesFailedProduce++;
 
       if (Client.LearningFactorCounter <= Client.LearningFactor)
       {
