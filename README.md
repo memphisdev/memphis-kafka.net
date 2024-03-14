@@ -18,12 +18,7 @@ To use `Superstream` with kafka producer, first define the producer configuratio
   
 ```c#
 var config = new ProducerConfig { BootstrapServers = brokerList };
-var options = new ProducerBuildOptions
-{
-  Token = "<superstream-token>",
-  Host = "<superstream-host>",
-  ProducerConfig = config
-};
+var options = new ProducerBuildOptions(config);
 ```
 
 Then create a new instance of kafka producer and use `SuperstreamInitializer.Init` to initialize the producer with `Superstream` options:
@@ -31,7 +26,7 @@ Then create a new instance of kafka producer and use `SuperstreamInitializer.Ini
 ```c#
 var kafkaProducer = new ProducerBuilder<string?, byte[]>(config)
   .Build();
-using var producer = SuperstreamInitializer.Init(kafkaProducer, options);
+using var producer = SuperstreamInitializer.Init("<superstream-token>", "<superstream-host>", kafkaProducer, options);
 ```
 
 Finally, to produce messages to kafka, use `ProduceAsync` or `Produce`:
@@ -51,12 +46,7 @@ var config = new ConsumerConfig
   BootstrapServers = brokerList,
   EnableAutoCommit = false
 };
-var options = new ConsumerBuildOptions
-{
-  Token = "<superstream-token>",
-  Host = "<superstream-host>",
-  ConsumerConfig = config
-};
+var options = new ConsumerBuildOptions(config);
 ```
 
 Then create a new instance of kafka consumer and use `SuperstreamInitializer.Init` to initialize the consumer with `Superstream` options:
@@ -65,7 +55,7 @@ Then create a new instance of kafka consumer and use `SuperstreamInitializer.Ini
 var kafkaConsumer = new ConsumerBuilder<Ignore, byte[]>(config)
         .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
         .Build();
-using var consumer = SuperstreamInitializer.Init(kafkaConsumer, options);
+using var consumer = SuperstreamInitializer.Init("<superstream-token>", "<superstream-host>",kafkaConsumer, options);
 ```
 
 Finally, to consume messages from kafka, use `Consume`:

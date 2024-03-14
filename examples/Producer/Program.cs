@@ -18,17 +18,14 @@ var config = new ProducerConfig
   SaslMechanism = SaslMechanism.Plain
 };
 
-var options = new ProducerBuildOptions
+var options = new ProducerBuildOptions(config)
 {
-  Token = token,
-  Host = host,
-  ProducerConfig = config,
   LearningFactor = 250 // optional
 };
 
 var kafkaProducer = new ProducerBuilder<string?, byte[]>(config)
   .Build();
-using var producer = SuperstreamInitializer.Init(kafkaProducer, options);
+using var producer = SuperstreamInitializer.Init(token, host, kafkaProducer, options);
 
 Console.WriteLine("\n-----------------------------------------------------------------------");
 Console.WriteLine($"Producer {producer.Name} producing on topic {topicName}.");
