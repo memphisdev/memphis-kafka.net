@@ -21,17 +21,12 @@ var config = new ConsumerConfig
   SecurityProtocol = SecurityProtocol.SaslSsl,
   SaslMechanism = SaslMechanism.Plain
 };
-var options = new ConsumerBuildOptions
-{
-  Token = token,
-  Host = host,
-  ConsumerConfig = config
-};
+var options = new ConsumerBuildOptions(config);
 
 var kafkaConsumer = new ConsumerBuilder<Ignore, byte[]>(config)
         .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
         .Build();
-using var consumer = SuperstreamInitializer.Init(kafkaConsumer, options);
+using var consumer = SuperstreamInitializer.Init(token, host, kafkaConsumer, options);
 
 // consume by specific partition
 consumer.Assign(topics.Select(topic => new TopicPartitionOffset(topic, 1, Offset.Beginning)).ToList());

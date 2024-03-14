@@ -13,7 +13,7 @@ internal class SuperstreamManager
   public static void InitializeNatsConnection(
     string token,
     ClientType clientType,
-    string host = "broker.superstream.dev"
+    string host = ""
   )
   {
     var options = ConnectionFactory.GetDefaultOptions();

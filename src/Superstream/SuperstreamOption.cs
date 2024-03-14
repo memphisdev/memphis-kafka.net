@@ -24,5 +24,5 @@ internal class SuperstreamOption
   public string ConsumerGroup { get; set; } = null!;
   public string Servers { get; set; } = null!;
 
-  public static SuperstreamOption Default => new() { Host = "broker.superstream.dev" };
+  public static SuperstreamOption Default => new() { Host = "" };
 }
