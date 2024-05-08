@@ -8,8 +8,8 @@
 
     <PackageId>Superstream</PackageId>
     <Version>1.0.3</Version>
-    <Authors>Memphis.dev team</Authors>
-    <Company>Memphis.dev</Company>
+    <Authors>Superstream team</Authors>
+    <Company>Superstream</Company>
     <PackageTags>Superstream</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
